@@ -145,7 +145,6 @@ function HomeWrapper() {
     }
   }, [isAuthenticated, profile, profileLoading]);
 
-  // Show branded loading screen while auth is initializing
   if (isInitializing) {
     return <LoadingScreen />;
   }
@@ -161,7 +160,7 @@ function HomeWrapper() {
   return <FeedPage />;
 }
 
-// ---- Root component ----
+// ---- Root component: renders router + toaster ----
 function RootComponent() {
   return (
     <>
