@@ -88,9 +88,7 @@ export function InternetIdentityProvider({
   children: ReactNode;
   createOptions?: AuthClientCreateOptions;
 }>) {
-  // Store createOptions in a ref so it doesn't trigger useEffect re-runs
-  const createOptionsRef = useRef(createOptions);
-  // Store authClient in a ref so setting it does NOT trigger re-renders
+  // authClientRef so changes never retrigger useEffect
   const authClientRef = useRef<AuthClient | undefined>(undefined);
   const [identity, setIdentity] = useState<Identity | undefined>(undefined);
   const [loginStatus, setStatus] = useState<Status>("initializing");
@@ -119,15 +117,15 @@ export function InternetIdentityProvider({
   );
 
   const login = useCallback(() => {
-    const client = authClientRef.current;
-    if (!client) {
+    const authClient = authClientRef.current;
+    if (!authClient) {
       setErrorMessage(
         "AuthClient is not initialized yet, make sure to call `login` on user interaction e.g. click.",
       );
       return;
     }
 
-    const currentIdentity = client.getIdentity();
+    const currentIdentity = authClient.getIdentity();
     if (
       !currentIdentity.getPrincipal().isAnonymous() &&
       currentIdentity instanceof DelegationIdentity &&
@@ -145,17 +143,17 @@ export function InternetIdentityProvider({
     };
 
     setStatus("logging-in");
-    void client.login(options);
+    void authClient.login(options);
   }, [handleLoginError, handleLoginSuccess, setErrorMessage]);
 
   const clear = useCallback(() => {
-    const client = authClientRef.current;
-    if (!client) {
+    const authClient = authClientRef.current;
+    if (!authClient) {
       setErrorMessage("Auth client not initialized");
       return;
     }
 
-    void client
+    void authClient
       .logout()
       .then(() => {
         setIdentity(undefined);
@@ -173,19 +171,20 @@ export function InternetIdentityProvider({
       });
   }, [setErrorMessage]);
 
-  // Runs ONCE on mount. Uses ref for createOptions to avoid re-run on prop changes.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentionally runs once on mount only
   useEffect(() => {
     let cancelled = false;
     void (async () => {
       try {
         setStatus("initializing");
-        const client = await createAuthClient(createOptionsRef.current);
+        const client = await createAuthClient(createOptions);
         if (cancelled) return;
         authClientRef.current = client;
         const isAuthenticated = await client.isAuthenticated();
         if (cancelled) return;
         if (isAuthenticated) {
-          setIdentity(client.getIdentity());
+          const loadedIdentity = client.getIdentity();
+          setIdentity(loadedIdentity);
         }
       } catch (unknownError) {
         if (!cancelled) {
@@ -203,7 +202,6 @@ export function InternetIdentityProvider({
     return () => {
       cancelled = true;
     };
-    // biome-ignore lint/correctness/useExhaustiveDependencies: intentionally runs once on mount
   }, []);
 
   const value = useMemo<ProviderValue>(
