@@ -17,31 +17,27 @@
     "indentStyle": "space",
     "indentWidth": 2
   },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "correctness": {
+        "useHookAtTopLevel": "error",
+        "noUnusedVariables": "error"
+      },
+      "suspicious": {
+        "noExplicitAny": "off"
+      },
+      "style": {
+        "useConst": "off",
+        "noNonNullAssertion": "off"
+      }
+    }
+  },
   "javascript": {
     "formatter": {
       "quoteStyle": "double",
       "semicolons": "always"
-    }
-  },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "correctness": {
-        "noUnusedVariables": "error",
-        "useHookAtTopLevel": "error"
-      },
-      "recommended": true,
-      "style": {
-        "noNonNullAssertion": "off",
-        "useConst": "off"
-      },
-      "suspicious": {
-        "noExplicitAny": "off",
-        "noArrayIndexKey": "off"
-      },
-      "a11y": {
-        "useSemanticElements": "off"
-      }
     }
   }
 }

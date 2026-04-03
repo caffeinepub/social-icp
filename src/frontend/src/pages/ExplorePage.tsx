@@ -221,13 +221,13 @@ export default function ExplorePage() {
                       </div>
                     </div>
                     <p className="text-sm text-foreground/80 line-clamp-3">
-                      {parts.map((part, i) =>
+                      {parts.map((part) =>
                         part.type !== "text" ? (
-                          <span key={i} style={{ color: "#60A5FA" }}>
+                          <span key={part.value} style={{ color: "#60A5FA" }}>
                             {part.value}
                           </span>
                         ) : (
-                          <span key={i}>{part.value}</span>
+                          <span key={part.value}>{part.value}</span>
                         ),
                       )}
                     </p>

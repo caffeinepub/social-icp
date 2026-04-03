@@ -54,6 +54,7 @@ function EditProfileModal({ profile, onClose, onSave }: EditProfileModalProps) {
   };
 
   return (
+    // biome-ignore lint/a11y/useSemanticElements: custom modal overlay needs div wrapper
     <div
       role="dialog"
       aria-modal="true"
@@ -211,6 +212,7 @@ function PaidFollowModal({
   };
 
   return (
+    // biome-ignore lint/a11y/useSemanticElements: custom modal overlay needs div wrapper
     <div
       role="dialog"
       aria-modal="true"
@@ -295,7 +297,6 @@ export default function ProfilePage({ principalId }: ProfilePageProps) {
   const followUserPaid = useFollowUserPaid();
   const saveProfile = useSaveProfile();
 
-  // Use caller profile or find from seed
   const profile = isOwnProfile
     ? (callerProfile ?? SEED_USERS[0])
     : (SEED_USERS.find((u) => u.principalId.toString() === principalId) ??

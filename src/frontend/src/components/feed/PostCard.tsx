@@ -33,13 +33,13 @@ function PostContent({ text }: { text: string }) {
   const parts = parsePostText(text);
   return (
     <p className="text-sm leading-relaxed text-foreground/90">
-      {parts.map((part, i) =>
+      {parts.map((part) =>
         part.type === "hashtag" || part.type === "mention" ? (
-          <span key={`tag-${i}`} className="hashtag">
+          <span key={part.value} className="hashtag">
             {part.value}
           </span>
         ) : (
-          <span key={`txt-${i}`}>{part.value}</span>
+          <span key={part.value}>{part.value}</span>
         ),
       )}
     </p>
@@ -238,7 +238,6 @@ export default function PostCard({ post, index }: Props) {
               className="px-4 pb-4 pt-2 border-t space-y-3"
               style={{ borderColor: "oklch(22% 0.04 240 / 0.5)" }}
             >
-              {/* Existing comments */}
               {post.comments.map((comment) => {
                 const commenter = getUserForPost(comment.commenter.toString());
                 return (
@@ -271,7 +270,6 @@ export default function PostCard({ post, index }: Props) {
                 );
               })}
 
-              {/* Add comment input */}
               <div className="flex gap-2 items-center mt-2">
                 <div
                   className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold text-white"

@@ -5,6 +5,7 @@ import {
   createRoute,
   createRouter,
 } from "@tanstack/react-router";
+import { Loader2, Zap } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import FeedPage from "./components/feed/FeedPage";
 import AppLayout from "./components/layout/AppLayout";
@@ -104,6 +105,31 @@ declare module "@tanstack/react-router" {
   }
 }
 
+// ---- Loading screen while auth initializes ----
+function LoadingScreen() {
+  return (
+    <div
+      className="min-h-screen flex flex-col items-center justify-center gap-4"
+      style={{
+        background:
+          "linear-gradient(135deg, oklch(10% 0.03 240), oklch(14% 0.04 260))",
+      }}
+    >
+      <div
+        className="w-16 h-16 rounded-2xl flex items-center justify-center"
+        style={{ background: "linear-gradient(135deg, #3B82F6, #8B5CF6)" }}
+      >
+        <Zap size={30} className="text-white" />
+      </div>
+      <h1 className="text-2xl font-bold">
+        <span className="text-foreground">Social</span>
+        <span className="gradient-text">ICP</span>
+      </h1>
+      <Loader2 size={24} className="animate-spin text-primary" />
+    </div>
+  );
+}
+
 // ---- Home wrapper: shows landing or feed based on auth ----
 function HomeWrapper() {
   const { identity, isInitializing } = useInternetIdentity();
@@ -119,11 +145,16 @@ function HomeWrapper() {
     }
   }, [isAuthenticated, profile, profileLoading]);
 
+  // Show branded loading screen while auth is initializing
+  if (isInitializing) {
+    return <LoadingScreen />;
+  }
+
   if (showOnboarding) {
     return <OnboardingPage onComplete={() => setShowOnboarding(false)} />;
   }
 
-  if (!isAuthenticated && !isInitializing) {
+  if (!isAuthenticated) {
     return <LandingPage />;
   }
 

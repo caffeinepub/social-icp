@@ -8,6 +8,7 @@ import { useCreateStatusUpdate, useStatusUpdates } from "../hooks/useQueries";
 import { formatRelativeTime, getInitials, parsePostText } from "../lib/helpers";
 
 const MAX_CHARS = 280;
+const SKELETON_KEYS = ["sk1", "sk2", "sk3", "sk4"] as const;
 
 export default function TimelinePage() {
   const { data: updates, isLoading } = useStatusUpdates();
@@ -121,11 +122,8 @@ export default function TimelinePage() {
         {/* Timeline posts */}
         <div className="space-y-3" data-ocid="timeline.list">
           {isLoading ? (
-            Array.from({ length: 4 }).map((_, i) => (
-              <div
-                key={`timeline-skeleton-${i}`}
-                className="card-surface p-4 animate-pulse"
-              >
+            SKELETON_KEYS.map((key) => (
+              <div key={key} className="card-surface p-4 animate-pulse">
                 <div
                   className="h-4 rounded w-3/4 mb-2"
                   style={{ background: "oklch(20% 0.03 240)" }}
